@@ -27,4 +27,9 @@ class App extends Component {
 
 export var globalDebugEnabled = false; //Enable debugging globally. Can overwrite local debug flags!
 
+/* Conditioned Console */
+export function conCon(localDebugger, message) {
+    if(globalDebugEnabled || localDebugger) console.log(message);
+}
+
 export default App;

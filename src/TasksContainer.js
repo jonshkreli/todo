@@ -13,7 +13,7 @@ class TasksContainer extends Component {
 
     state = {
         tasksList: [], //Supposed to receive all tasks data via ajax
-        activeTask: emptyTask(),
+        activeTask: null,
     };
 
     debugEnabled = false; //If true it will print debug messages

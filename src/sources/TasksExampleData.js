@@ -11,7 +11,7 @@ export const TasksExampleData = [
         done: false,
         created: new Date(2018, 4, 17, 4, 6), //optional
         lastUpdated: new Date(2018, 4, 17, 10, 10), //optional
-        deadline: new Date(2018, 4, 18) //optional
+        deadline: new Date(2018, 4, 18, 15, 30) //optional
     },
     {
         id: 2,

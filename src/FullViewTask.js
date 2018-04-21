@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
+import DatePicker from 'material-ui/DatePicker';
+import TimePicker from 'material-ui/TimePicker';
+import {conCon} from "./App";
 
 
 /**
@@ -43,13 +46,13 @@ class FullViewTask extends Component {
         editingButtonsActive: false
     };
 
-    debugEnabled = false; //If true it will print debug messages
+    debugEnabled = true; //If true it will print debug messages
 
     constructor(props) {
         super(props);
     }
 
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps) {
         this.setState({task: nextProps.taskToDisplay});
     }
 
@@ -70,6 +73,36 @@ class FullViewTask extends Component {
     handleChangeMark = (event) => {
         let modifiedTask = this.state.task;
         modifiedTask.done = !this.state.task.done;
+        this.setState({
+            task: modifiedTask,
+            editingButtonsActive: true
+        });
+    };
+
+    handleChangeDeadlineDate = (event, date) => {
+
+        if(! this.state.task) return;
+
+        let modifiedTask = this.state.task;
+        conCon(this.debugEnabled, date);
+
+        /*date is always date and 00:00:00, so we need to only add date if we have one already */
+        modifiedTask.deadline.setFullYear(date.getFullYear());
+        modifiedTask.deadline.setMonth(date.getMonth());
+        modifiedTask.deadline.setDate(date.getDate());
+
+        this.setState({
+            task: modifiedTask,
+            editingButtonsActive: true
+        });
+    };
+
+    handleChangeDeadlineTime = (event, time) => {
+        let modifiedTask = this.state.task;
+        conCon(this.debugEnabled, time);
+
+        modifiedTask.deadline = time;
+
         this.setState({
             task: modifiedTask,
             editingButtonsActive: true
@@ -107,6 +140,9 @@ class FullViewTask extends Component {
     };
 
     render() {
+
+        if( ! this.state.task) return <div id='no-active-task'>No task selected</div>;
+
         return (
             <div id='full-task-view'>
                 <div id='header-info'>
@@ -114,23 +150,41 @@ class FullViewTask extends Component {
                 </div>
 
                 <div id='main-data'>
-                    <TextField
-                        id="title"
-                        value={this.state.task.title}
-                        onChange={(event, newValue) => this.handleChangeText('title', newValue)}
-                        hintText='title'
-                    />
-                    <TextField
-                        id="description"
-                        value={this.state.task.description}
-                        onChange={(event, newValue) => this.handleChangeText('description', newValue)}
-                        hintText='description'
-                    />
-                    <FlatButton
-                        icon={<i
-                            className="material-icons">{(this.state.task.done ? 'check_box' : 'check_box_outline_blank')}</i>}
-                        onClick={this.handleChangeMark}
-                    />
+                    <div id='headline'>
+                        <TextField
+                            id="title"
+                            value={this.state.task.title}
+                            onChange={(event, newValue) => this.handleChangeText('title', newValue)}
+                            hintText='title'
+                        />
+                        <DatePicker
+                            hintText="DEADLINE date"
+                            value={this.state.task.deadline}
+                            onChange={this.handleChangeDeadlineDate}
+                        />
+                        <TimePicker
+                            //format="ampm"
+                            hintText={"DEADLINE time"}
+                            value={this.state.task.deadline}
+                            onChange={this.handleChangeDeadlineTime}
+                        />
+                        <FlatButton
+                            icon={<i
+                                className="material-icons">{(this.state.task.done ? 'check_box' : 'check_box_outline_blank')}</i>}
+                            onClick={this.handleChangeMark}
+                        />
+                    </div>
+
+                    <div id='description'>
+                        <TextField
+                            id="description"
+                            value={this.state.task.description}
+                            onChange={(event, newValue) => this.handleChangeText('description', newValue)}
+                            hintText='description'
+                            multiLine={true}
+                        />
+                    </div>
+
                 </div>
 
                 <div id='actions'>
