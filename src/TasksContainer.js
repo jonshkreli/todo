@@ -16,7 +16,7 @@ class TasksContainer extends Component {
     /**
      * Render function will generate a <Task/> from props.data with map function
      * It will pass as props all properties of "data" objects
-     * properties passed
+     * properties passed:
      * - (String) title
      * - (String) description
      * - (Boolean) done
