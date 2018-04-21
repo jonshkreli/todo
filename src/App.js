@@ -3,6 +3,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import logo from './logo.svg';
 import './App.css';
 import TasksContainer from "./TasksContainer";
+import {TasksExampleData} from "./sources/TasksExampleData";
 
 class App extends Component {
   render() {
@@ -14,7 +15,7 @@ class App extends Component {
           <h1 className="App-title">To do</h1>
         </header>
         <p className="App-intro">
-          <TasksContainer/>
+          <TasksContainer data={TasksExampleData}/>
         </p>
       </div>
         </MuiThemeProvider>
