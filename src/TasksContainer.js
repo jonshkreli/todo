@@ -16,6 +16,8 @@ class TasksContainer extends Component {
         activeTask: emptyTask(),
     };
 
+    debugEnabled = false; //If true it will print debug messages
+
     constructor() {
         super();
         this.setActive = this.setActive.bind(this);
@@ -99,12 +101,17 @@ class TasksContainer extends Component {
                         />
                     )}
                 </div>
-                <FullViewTask taskToDisplay={this.state.activeTask}/>
+                <FullViewTask
+                    taskToDisplay={this.state.activeTask}
+                    saveChanges={(modifiedTask) => {
+                        this.updateWithAjax(this.state.activeTask, modifiedTask)
+                    }}
+                />
             </div>
         );
     }
 
-     handleClick(e) {
+    handleClick(e) {
         e.preventDefault();
         console.log('The link was clicked.');
     }

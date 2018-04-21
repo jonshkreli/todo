@@ -25,4 +25,6 @@ class App extends Component {
   }
 }
 
+export var globalDebugEnabled = false; //Enable debugging globally. Can overwrite local debug flags!
+
 export default App;

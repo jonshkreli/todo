@@ -43,6 +43,8 @@ class FullViewTask extends Component {
         editingButtonsActive: false
     };
 
+    debugEnabled = false; //If true it will print debug messages
+
     constructor(props) {
         super(props);
     }
@@ -64,6 +66,16 @@ class FullViewTask extends Component {
         });
     };
 
+    /*Same as handleChangeText, just that it is for mark done/undone*/
+    handleChangeMark = (event) => {
+        let modifiedTask = this.state.task;
+        modifiedTask.done = !this.state.task.done;
+        this.setState({
+            task: modifiedTask,
+            editingButtonsActive: true
+        });
+    };
+
     /**
      * This function will make a callback to TasksContainer with the updated task
      * This disables save and cancel buttons
@@ -72,7 +84,7 @@ class FullViewTask extends Component {
         this.setState({
             editingButtonsActive: false
         });
-        this.props.saveChanges(this.state.task);
+        this.props.saveChanges(this.props.taskToDisplay, this.state.task);
     };
 
     /**
@@ -117,7 +129,7 @@ class FullViewTask extends Component {
                     <FlatButton
                         icon={<i
                             className="material-icons">{(this.state.task.done ? 'check_box' : 'check_box_outline_blank')}</i>}
-                        onClick={this.saveMarkingEvent}
+                        onClick={this.handleChangeMark}
                     />
                 </div>
 

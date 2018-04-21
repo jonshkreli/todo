@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
-
+import {globalDebugEnabled} from "./App";
 
 
 /**
@@ -29,14 +29,25 @@ import FlatButton from 'material-ui/FlatButton';
 class InlineTask extends Component {
 
     state = {
-      title: this.props.title,
+        title: this.props.title,
         done: this.props.done,
         editingButtonsActive: false
     };
 
+    debugEnabled = false; //If true it will print debug messages
+
     constructor(props) {
         super(props);
     }
+
+    componentWillReceiveProps(nextProps) {
+       if(this.debugEnabled || globalDebugEnabled) console.log(nextProps);
+        this.setState({
+            title: nextProps.title,
+            done: nextProps.done,
+        });
+    }
+
 
     /**
      * @param event We need the value from the event (event.target.value) to get the new text
@@ -48,8 +59,6 @@ class InlineTask extends Component {
             title: event.target.value,
             editingButtonsActive: true
         });
-
-
     };
 
     /**
@@ -105,7 +114,8 @@ class InlineTask extends Component {
                     onClick={this.cancelEvent}
                 />
                 <FlatButton
-                    icon={<i className="material-icons">{(this.state.done ? 'check_box' : 'check_box_outline_blank')}</i>}
+                    icon={<i
+                        className="material-icons">{(this.state.done ? 'check_box' : 'check_box_outline_blank')}</i>}
                     onClick={this.saveMarkingEvent}
                 />
             </div>
