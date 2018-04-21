@@ -3,6 +3,7 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
+import Chip from 'material-ui/Chip';
 import {conCon} from "./App";
 
 
@@ -26,6 +27,10 @@ import {conCon} from "./App";
  *   description: Callback function. This will be used too as a callback function to send edited Task
  *   from <FullViewTask/> to <TasksContainer/>
  *
+ * - name deleteThis
+ *   type: Function()
+ *   description: Callback function. This will be used too as a callback function to send deleted Task
+ *   from <FullViewTask/> to <TasksContainer/>
  *
  * state:
  * - (Number) id
@@ -81,7 +86,7 @@ class FullViewTask extends Component {
 
     handleChangeDeadlineDate = (event, date) => {
 
-        if(! this.state.task) return;
+        if (!this.state.task) return;
 
         let modifiedTask = this.state.task;
         conCon(this.debugEnabled, date);
@@ -131,21 +136,22 @@ class FullViewTask extends Component {
         });
     };
 
-    /**
-     * This function will send a callback to TasksContainer.updateWithAjax via property saveMarking
-     * */
-    saveMarkingEvent = (event) => {
-        this.setState({done: !this.state.done});
-        this.props.saveMarking(!this.state.done)
-    };
-
     render() {
 
-        if( ! this.state.task) return <div id='no-active-task'>No task selected</div>;
+        if (!this.state.task) return <div id='no-active-task'>No task selected</div>;
 
+        //TODO: fill header-info
+        //TODO: DELETE button
         return (
             <div id='full-task-view'>
                 <div id='header-info'>
+                    <Chip>Created {this.state.task.created.toLocaleString()}</Chip>
+
+                    {this.state.task.lastUpdated ?
+                        <Chip>
+                            Last modified {this.state.task.lastUpdated.toLocaleString()}
+                        </Chip>
+                        : ''}
 
                 </div>
 
@@ -202,6 +208,12 @@ class FullViewTask extends Component {
                         disabled={!this.state.editingButtonsActive}
                         onClick={this.cancelEvent}
                     />
+                    <FlatButton
+                        label="Delete"
+                        icon={<i className="material-icons">delete</i>}
+                        onClick={this.props.deleteThis}
+                    />
+
                 </div>
 
             </div>

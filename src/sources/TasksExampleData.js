@@ -9,7 +9,7 @@ export const TasksExampleData = [
         title: 'Go to gym',
         description: 'Do the new exercise learned yesterday',
         done: false,
-        created: new Date(2018, 4, 17, 4, 6), //optional
+        created: new Date(2018, 4, 17, 4, 6),
         lastUpdated: new Date(2018, 4, 17, 10, 10), //optional
         deadline: new Date(2018, 4, 18, 15, 30) //optional
     },
@@ -18,7 +18,7 @@ export const TasksExampleData = [
         title: 'Book flight',
         description: 'Book flight to Malta',
         done: true,
-        created: new Date(2018, 2, 12, 6, 12), //optional
+        created: new Date(2018, 2, 12, 6, 12),
         lastUpdated: null, //optional
         deadline: new Date(null) //optional
     },
@@ -27,6 +27,7 @@ export const TasksExampleData = [
         title: 'Meet somebody',
         description: '',
         done: false,
+        created: new Date(2018, 4, 17, 4, 6),
     },
 
 ];

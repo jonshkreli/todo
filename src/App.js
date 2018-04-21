@@ -16,9 +16,9 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">To do</h1>
         </header>
-        <p className="App-intro">
+        <div className="App-intro">
           <TasksContainer/>
-        </p>
+        </div>
       </div>
         </MuiThemeProvider>
     );

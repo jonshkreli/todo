@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Task from "./InlineTask";
 import {TasksExampleData} from "./sources/TasksExampleData";
 import FullViewTask from "./FullViewTask";
+import {conCon} from "./App";
 
 /**
  * @author Jon Shkreli
@@ -44,8 +45,22 @@ class TasksContainer extends Component {
             let modifiedTaskList = this.state.tasksList;
             let findModifiedTask = modifiedTaskList.find(task => task === taskData);
             findModifiedTask = modifiedTask;
+            findModifiedTask.lastUpdated = new Date();
 
             this.setState({tasksList: modifiedTaskList})
+        }, simulateDelay ? simulateDelay : 0)
+
+    }
+
+    /**
+     * Callback function received from TasksContainer
+     * This will send delete data to backend via ajax
+     * */
+    deleteWithAjax(taskData) {
+        conCon(this.debugEnabled, taskData);
+
+        setTimeout(() => {
+            this.setState({tasksList: this.state.tasksList.filter(task => task !== taskData)})
         }, simulateDelay ? simulateDelay : 0)
     }
 
@@ -81,7 +96,7 @@ class TasksContainer extends Component {
             <div>
                 <div id='tasks-list'>
                     {this.state.tasksList.map(taskData =>
-                        <Task
+                        <Task key={taskData.id}
                             title={taskData.title}
                             done={taskData.done}
                             //created={taskData.created}
@@ -106,14 +121,10 @@ class TasksContainer extends Component {
                     saveChanges={(modifiedTask) => {
                         this.updateWithAjax(this.state.activeTask, modifiedTask)
                     }}
+                    deleteThis={() => this.deleteWithAjax(this.state.activeTask)}
                 />
             </div>
         );
-    }
-
-    handleClick(e) {
-        e.preventDefault();
-        console.log('The link was clicked.');
     }
 }
 
