@@ -15,12 +15,14 @@ import FlatButton from 'material-ui/FlatButton';
  * - name: saveTitleChanges
  *   type: Function(title)
  *   description: Callback function. This will be used too as a callback function to send edited title
- *   from <InlineTask/> to <App/>
+ *   from <InlineTask/> to <TasksContainer/>
  *
  *
  * state:
  * - (String) title
  *    Will be initialised from this.props.title. It will hold the value in textfield
+ * - (Boolean) done
+ *    Will be initialised from this.props.done. It will hold the value in checkbox
  * - (Boolean) editingButtonsActive
  *    Default: false. Will be active once user start editing the TextField
  * */
@@ -46,6 +48,8 @@ class InlineTask extends Component {
             title: event.target.value,
             editingButtonsActive: true
         });
+
+
     };
 
     /**
@@ -80,7 +84,7 @@ class InlineTask extends Component {
 
     render() {
         return (
-            <div>
+            <div className='inline-task' onClick={this.props.setThisActive}>
                 <TextField
                     id="text-field-controlled"
                     value={this.state.title}

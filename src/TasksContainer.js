@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Task from "./InlineTask";
 import {TasksExampleData} from "./sources/TasksExampleData";
+import FullViewTask from "./FullViewTask";
 
 /**
  * @author Jon Shkreli
@@ -12,11 +13,18 @@ class TasksContainer extends Component {
 
     state = {
         tasksList: [], //Supposed to receive all tasks data via ajax
+        activeTask: emptyTask(),
     };
 
-    constructor(props) {
-        super(props);
-        this.state.tasksList = this.getTasksListWithAjax();
+    constructor() {
+        super();
+        this.setActive = this.setActive.bind(this);
+    }
+
+    componentWillMount() {
+        setTimeout(() => {
+            this.setState({tasksList: this.getTasksListWithAjax()})
+        }, simulateDelay ? simulateDelay : 0)
     }
 
     getTasksListWithAjax() {
@@ -30,13 +38,18 @@ class TasksContainer extends Component {
      * */
     updateWithAjax(taskData, modifiedTask) {
         console.log(modifiedTask);
-            setTimeout(() => {
-                let modifiedTaskList = this.state.tasksList;
-                let findModifiedTask = modifiedTaskList.find(task => task === taskData);
-                findModifiedTask = modifiedTask;
+        setTimeout(() => {
+            let modifiedTaskList = this.state.tasksList;
+            let findModifiedTask = modifiedTaskList.find(task => task === taskData);
+            findModifiedTask = modifiedTask;
 
-                this.setState({tasksList: modifiedTaskList})
-            }, simulateDelay ? simulateDelay : 0)
+            this.setState({tasksList: modifiedTaskList})
+        }, simulateDelay ? simulateDelay : 0)
+    }
+
+    setActive(taskData) {
+        console.log(taskData);
+        this.setState({activeTask: taskData})
     }
 
     /**
@@ -68,11 +81,10 @@ class TasksContainer extends Component {
                     {this.state.tasksList.map(taskData =>
                         <Task
                             title={taskData.title}
-                            description={taskData.description}
                             done={taskData.done}
-                            created={taskData.created}
-                            lastUpdated={taskData.lastUpdated}
-                            deadline={taskData.deadline}
+                            //created={taskData.created}
+                            //lastUpdated={taskData.lastUpdated}
+                            //deadline={taskData.deadline}
                             saveTitleChanges={(title) => {
                                 let modifiedTask = taskData;
                                 modifiedTask.title = title;
@@ -83,18 +95,36 @@ class TasksContainer extends Component {
                                 modifiedTask.done = done;
                                 this.updateWithAjax(taskData, modifiedTask)
                             }}
+                            setThisActive={() => this.setActive(taskData)}
                         />
                     )}
                 </div>
-
-                <div id='task-full-view'>
-
-                </div>
+                <FullViewTask taskToDisplay={this.state.activeTask}/>
             </div>
         );
     }
+
+     handleClick(e) {
+        e.preventDefault();
+        console.log('The link was clicked.');
+    }
 }
 
-const simulateDelay = 3000;
+//It is used to simulate ajax delays
+const simulateDelay = false;
+
+
+export function emptyTask() {
+    return {
+        id: null,
+        title: null,
+        description: null,
+        done: false,
+        created: null,
+        lastUpdated: null,
+        deadline: null,
+    }
+}
+
 
 export default TasksContainer;
