@@ -10,6 +10,9 @@ import Task from "./Task";
  * - name: data
  *   type: Array
  *   description: see /sources/TasksExampleData.js
+ * - name: saveChanges
+ *   type: Function(newTask)
+ *   description: Callback function. This will be used too as a callback function to send data from <Task/> to <App/>
  * */
 class TasksContainer extends Component {
 
@@ -23,6 +26,7 @@ class TasksContainer extends Component {
      * - (Date) created
      * - (Date) lastUpdated
      * - (Date) deadline
+     * - (function) saveChanges
      * */
     render() {
         return (
@@ -35,6 +39,7 @@ class TasksContainer extends Component {
                     created={taskData.created}
                     lastUpdated={taskData.lastUpdated}
                     deadline={taskData.deadline}
+                    saveChanges={this.props.saveChanges}
                     />
                 )}
             </div>

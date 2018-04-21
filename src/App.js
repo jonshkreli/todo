@@ -6,6 +6,15 @@ import TasksContainer from "./TasksContainer";
 import {TasksExampleData} from "./sources/TasksExampleData";
 
 class App extends Component {
+
+    /**
+     * Callback function received from TasksContainer
+     * This will send updated data to backedn via ajax
+     * */
+    updateWithAjax(newTask) {
+        console.log(newTask)
+    }
+
   render() {
     return (
         <MuiThemeProvider>
@@ -15,7 +24,7 @@ class App extends Component {
           <h1 className="App-title">To do</h1>
         </header>
         <p className="App-intro">
-          <TasksContainer data={TasksExampleData}/>
+          <TasksContainer data={TasksExampleData} saveChanges={this.updateWithAjax}/>
         </p>
       </div>
         </MuiThemeProvider>

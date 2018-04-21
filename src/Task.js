@@ -17,6 +17,9 @@ import ActionAndroid from 'material-ui/svg-icons/navigation/cancel';
  * - (Date) created
  * - (Date) lastUpdated
  * - (Date) deadline
+ * - name: saveChanges
+ *   type: Function(newTask)
+ *   description: Callback function. This will be used too as a callback function to send data from <Task/> to <App/>
  *
  *
  * state:
@@ -53,10 +56,10 @@ class Task extends Component {
      * This disables save and cancel buttons
      * */
     saveEvent = (event) => {
-        //TODO: callback function
         this.setState({
             editingButtonsActive: false
         });
+        this.props.saveChanges(this.state.title);
     };
 
     /**
