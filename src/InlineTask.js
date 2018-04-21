@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
-import ActionAndroid from 'material-ui/svg-icons/navigation/cancel';
 
 
 
@@ -29,6 +28,7 @@ class InlineTask extends Component {
 
     state = {
       title: this.props.title,
+        done: this.props.done,
         editingButtonsActive: false
     };
 
@@ -64,14 +64,19 @@ class InlineTask extends Component {
      * This disables save and cancel buttons
      * */
     cancelEvent = (event) => {
-        //TODO: callback function
         this.setState({
             title: this.props.title,
             editingButtonsActive: false
         });
     };
 
-
+    /**
+     * This function will send a callback to TasksContainer.updateWithAjax via property saveMarking
+     * */
+    saveMarkingEvent = (event) => {
+        this.setState({done: !this.state.done});
+        this.props.saveMarking(!this.state.done)
+    };
 
     render() {
         return (
@@ -94,6 +99,10 @@ class InlineTask extends Component {
                     icon={<i className="material-icons">cancel</i>}
                     disabled={!this.state.editingButtonsActive}
                     onClick={this.cancelEvent}
+                />
+                <FlatButton
+                    icon={<i className="material-icons">{(this.state.done ? 'check_box' : 'check_box_outline_blank')}</i>}
+                    onClick={this.saveMarkingEvent}
                 />
             </div>
         );

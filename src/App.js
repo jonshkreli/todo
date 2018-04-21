@@ -17,7 +17,7 @@ class App extends Component {
           <h1 className="App-title">To do</h1>
         </header>
         <p className="App-intro">
-          <TasksContainer data={TasksExampleData}/>
+          <TasksContainer/>
         </p>
       </div>
         </MuiThemeProvider>

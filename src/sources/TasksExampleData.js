@@ -5,6 +5,7 @@
 
 export const TasksExampleData = [
     {
+        id: 1,
         title: 'Go to gym',
         description: 'Do the new exercise learned yesterday',
         done: false,
@@ -13,6 +14,7 @@ export const TasksExampleData = [
         deadline: new Date(2018, 4, 18) //optional
     },
     {
+        id: 2,
         title: 'Book flight',
         description: 'Book flight to Malta',
         done: true,
@@ -21,6 +23,7 @@ export const TasksExampleData = [
         deadline: new Date(null) //optional
     },
     {
+        id: 3,
         title: 'Meet somebody',
         description: '',
         done: false,

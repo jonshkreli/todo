@@ -10,11 +10,11 @@ import {TasksExampleData} from "./sources/TasksExampleData";
 class TasksContainer extends Component {
 
 
-    state  = {
+    state = {
         tasksList: [], //Supposed to receive all tasks data via ajax
     };
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state.tasksList = this.getTasksListWithAjax();
     }
@@ -28,8 +28,15 @@ class TasksContainer extends Component {
      * Callback function received from TasksContainer
      * This will send updated data to backend via ajax
      * */
-    updateWithAjax(modifiedTask) {
-        console.log(modifiedTask)
+    updateWithAjax(taskData, modifiedTask) {
+        console.log(modifiedTask);
+            setTimeout(() => {
+                let modifiedTaskList = this.state.tasksList;
+                let findModifiedTask = modifiedTaskList.find(task => task === taskData);
+                findModifiedTask = modifiedTask;
+
+                this.setState({tasksList: modifiedTaskList})
+            }, simulateDelay ? simulateDelay : 0)
     }
 
     /**
@@ -45,6 +52,7 @@ class TasksContainer extends Component {
      * The second will have a FullTaskView
      * It will pass as props all properties of "data" objects
      * properties passed:
+     * - (Number) id
      * - (String) title
      * - (String) description
      * - (Boolean) done
@@ -68,7 +76,13 @@ class TasksContainer extends Component {
                             saveTitleChanges={(title) => {
                                 let modifiedTask = taskData;
                                 modifiedTask.title = title;
-                                this.updateWithAjax(modifiedTask)}}
+                                this.updateWithAjax(taskData, modifiedTask)
+                            }}
+                            saveMarking={(done) => {
+                                let modifiedTask = taskData;
+                                modifiedTask.done = done;
+                                this.updateWithAjax(taskData, modifiedTask)
+                            }}
                         />
                     )}
                 </div>
@@ -80,5 +94,7 @@ class TasksContainer extends Component {
         );
     }
 }
+
+const simulateDelay = 3000;
 
 export default TasksContainer;
