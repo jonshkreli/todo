@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import Task from "./InlineTask";
 import {TasksExampleData} from "./sources/TasksExampleData";
 import FullViewTask from "./FullViewTask";
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Snackbar from 'material-ui/Snackbar';
 import {conCon} from "./App";
 
 /**
@@ -15,6 +17,7 @@ class TasksContainer extends Component {
     state = {
         tasksList: [], //Supposed to receive all tasks data via ajax
         activeTask: null,
+        snackbar: {open: false, message: ''}
     };
 
     debugEnabled = false; //If true it will print debug messages
@@ -22,6 +25,7 @@ class TasksContainer extends Component {
     constructor() {
         super();
         this.setActive = this.setActive.bind(this);
+        this.addNewTask = this.addNewTask.bind(this);
     }
 
     componentWillMount() {
@@ -39,15 +43,22 @@ class TasksContainer extends Component {
      * Callback function received from TasksContainer
      * This will send updated data to backend via ajax
      * */
-    updateWithAjax(taskData, modifiedTask) {
+    updateWithAjax(modifiedTask, quickedit) {
         console.log(modifiedTask);
         setTimeout(() => {
             let modifiedTaskList = this.state.tasksList;
-            let findModifiedTask = modifiedTaskList.find(task => task === taskData);
-            findModifiedTask = modifiedTask;
+            let findModifiedTask = modifiedTaskList.find(task => task === modifiedTask);
             findModifiedTask.lastUpdated = new Date();
 
-            this.setState({tasksList: modifiedTaskList})
+            let message;
+            if(quickedit === 'done') message = modifiedTask.title + 'marked as ' + modifiedTask.done ? 'done' : 'undone';
+            else if(quickedit === 'title') message = modifiedTask.title + ' changed to ' + modifiedTask.title;
+            else message = (modifiedTask.title ? modifiedTask.title : 'task') + ' updated';
+
+            this.setState({
+                tasksList: modifiedTaskList,
+                snackbar: {open: true, message: message}
+            })
         }, simulateDelay ? simulateDelay : 0)
 
     }
@@ -60,12 +71,26 @@ class TasksContainer extends Component {
         conCon(this.debugEnabled, taskData);
 
         setTimeout(() => {
-            this.setState({tasksList: this.state.tasksList.filter(task => task !== taskData)})
+            this.setState({
+                tasksList: this.state.tasksList.filter(task => task !== taskData),
+                snackbar: {open: true, message: (taskData.title ? taskData.title : 'task') + ' deleted'}
+            })
         }, simulateDelay ? simulateDelay : 0)
     }
 
+    addNewTask() {
+        //Add a new empty task
+        let tempTaskList = this.state.tasksList;
+        let emptyTask = this.emptyTask();
+        tempTaskList.push(emptyTask);
+        this.setState({
+            tasksList: tempTaskList,
+            snackbar: {open: true, message: 'New task created'},
+            activeTask: emptyTask
+        })
+    }
+
     setActive(taskData) {
-        console.log(taskData);
         this.setState({activeTask: taskData})
     }
 
@@ -103,28 +128,58 @@ class TasksContainer extends Component {
                             //lastUpdated={taskData.lastUpdated}
                             //deadline={taskData.deadline}
                             saveTitleChanges={(title) => {
-                                let modifiedTask = taskData;
-                                modifiedTask.title = title;
-                                this.updateWithAjax(taskData, modifiedTask)
+                                taskData.title = title;
+                                this.updateWithAjax(taskData, 'title')
                             }}
                             saveMarking={(done) => {
-                                let modifiedTask = taskData;
-                                modifiedTask.done = done;
-                                this.updateWithAjax(taskData, modifiedTask)
+                                taskData.done = done;
+                                this.updateWithAjax(taskData, 'done')
                             }}
-                            setThisActive={() => this.setActive(taskData)}
+                            setThisActive={() => {this.setActive(taskData)}}
                         />
                     )}
+                    <FloatingActionButton
+                        onClick={this.addNewTask}
+                    >
+                        <i className="material-icons">add</i>
+                    </FloatingActionButton>
+
                 </div>
+
                 <FullViewTask
                     taskToDisplay={this.state.activeTask}
                     saveChanges={(modifiedTask) => {
-                        this.updateWithAjax(this.state.activeTask, modifiedTask)
+                        this.updateWithAjax(modifiedTask)
                     }}
                     deleteThis={() => this.deleteWithAjax(this.state.activeTask)}
                 />
+                <Snackbar
+                    open={this.state.snackbar.open}
+                    message={this.state.snackbar.message}
+                    autoHideDuration={3000}
+                    onRequestClose={this.handleRequestClose}
+                />
+
             </div>
         );
+    }
+
+    handleRequestClose = () => {
+        this.setState({
+            snackbar: {open: false, message: ''}
+        });
+    };
+
+    emptyTask() {
+        return {
+            id: String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Date.now(),
+            title: '',
+            description: '',
+            done: false,
+            created: new Date(),
+            lastUpdated: undefined,
+            deadline: undefined,
+        }
     }
 }
 
@@ -132,17 +187,7 @@ class TasksContainer extends Component {
 const simulateDelay = false;
 
 
-export function emptyTask() {
-    return {
-        id: null,
-        title: null,
-        description: null,
-        done: false,
-        created: null,
-        lastUpdated: null,
-        deadline: null,
-    }
-}
+
 
 
 export default TasksContainer;

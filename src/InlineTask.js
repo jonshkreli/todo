@@ -31,7 +31,7 @@ class InlineTask extends Component {
     state = {
         title: this.props.title,
         done: this.props.done,
-        editingButtonsActive: false
+        editingButtonsActive: false,
     };
 
     debugEnabled = false; //If true it will print debug messages

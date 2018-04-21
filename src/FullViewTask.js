@@ -91,6 +91,8 @@ class FullViewTask extends Component {
         let modifiedTask = this.state.task;
         conCon(this.debugEnabled, date);
 
+        if(! modifiedTask.deadline) modifiedTask.deadline = new Date();
+
         /*date is always date and 00:00:00, so we need to only add date if we have one already */
         modifiedTask.deadline.setFullYear(date.getFullYear());
         modifiedTask.deadline.setMonth(date.getMonth());
@@ -140,8 +142,6 @@ class FullViewTask extends Component {
 
         if (!this.state.task) return <div id='no-active-task'>No task selected</div>;
 
-        //TODO: fill header-info
-        //TODO: DELETE button
         return (
             <div id='full-task-view'>
                 <div id='header-info'>
