@@ -12,14 +12,11 @@ import ActionAndroid from 'material-ui/svg-icons/navigation/cancel';
  *
  * properties expected to receive from TasksContainer:
  * - (String) title
- * - (String) description
  * - (Boolean) done
- * - (Date) created
- * - (Date) lastUpdated
- * - (Date) deadline
- * - name: saveChanges
- *   type: Function(newTask)
- *   description: Callback function. This will be used too as a callback function to send data from <Task/> to <App/>
+ * - name: saveTitleChanges
+ *   type: Function(title)
+ *   description: Callback function. This will be used too as a callback function to send edited title
+ *   from <InlineTask/> to <App/>
  *
  *
  * state:
@@ -28,7 +25,7 @@ import ActionAndroid from 'material-ui/svg-icons/navigation/cancel';
  * - (Boolean) editingButtonsActive
  *    Default: false. Will be active once user start editing the TextField
  * */
-class Task extends Component {
+class InlineTask extends Component {
 
     state = {
       title: this.props.title,
@@ -55,11 +52,11 @@ class Task extends Component {
      * This function will make a callback to TasksContainer with the updated changes
      * This disables save and cancel buttons
      * */
-    saveEvent = (event) => {
+    saveTitleEvent = (event) => {
         this.setState({
             editingButtonsActive: false
         });
-        this.props.saveChanges(this.state.title);
+        this.props.saveTitleChanges(this.state.title);
     };
 
     /**
@@ -89,7 +86,7 @@ class Task extends Component {
                     primary={true}
                     icon={<i className="material-icons">save</i>}
                     disabled={!this.state.editingButtonsActive}
-                    onClick={this.saveEvent}
+                    onClick={this.saveTitleEvent}
                 />
                 <FlatButton
                     label="Cancel"
@@ -103,4 +100,4 @@ class Task extends Component {
     }
 }
 
-export default Task;
+export default InlineTask;
