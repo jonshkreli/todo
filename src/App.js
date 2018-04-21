@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import logo from './logo.svg';
 import './App.css';
+import TasksContainer from "./TasksContainer";
 
 class App extends Component {
   render() {
@@ -13,7 +14,7 @@ class App extends Component {
           <h1 className="App-title">To do</h1>
         </header>
         <p className="App-intro">
-          Here will be the tasks...
+          <TasksContainer/>
         </p>
       </div>
         </MuiThemeProvider>
