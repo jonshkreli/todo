@@ -3,7 +3,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import logo from './logo.svg';
 import './App.css';
 import TasksContainer from "./TasksContainer";
-import {TasksExampleData} from "./sources/TasksExampleData";
 
 class App extends Component {
 
@@ -13,7 +12,8 @@ class App extends Component {
         <MuiThemeProvider>
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          {/*<img src={logo} className="App-logo" alt="logo" />*/}
+            <i className="material-icons" style={{fontSize: '48px'}}>done</i>
           <h1 className="App-title">To do</h1>
         </header>
         <div className="App-intro">

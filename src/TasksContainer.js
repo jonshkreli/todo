@@ -172,6 +172,7 @@ class TasksContainer extends Component {
                         />
                     )}
                     <FloatingActionButton
+                        style={{margin: '10px'}}
                         onClick={this.addNewTask}
                     >
                         <i className="material-icons">add</i>

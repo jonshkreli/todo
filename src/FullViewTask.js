@@ -191,6 +191,7 @@ class FullViewTask extends Component {
                             onChange={this.handleChangeDeadlineTime}
                         />
                         <FlatButton
+                            label={'This task is ' + (this.state.task.done ? 'done' : 'undone')}
                             icon={<i
                                 className="material-icons">{(this.state.task.done ? 'check_box' : 'check_box_outline_blank')}</i>}
                             onClick={this.handleChangeMark}
