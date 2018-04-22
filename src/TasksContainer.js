@@ -34,6 +34,18 @@ class TasksContainer extends Component {
         }, simulateDelay ? simulateDelay : 0)
     }
 
+    shouldComponentUpdate(np, ns) {
+        conCon(this.debugEnabled, np, ns);
+        return true
+    }
+
+    componentDidUpdate() {
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+    }
+
     getTasksListWithAjax() {
         //This will return an array of tasks. For now we are using TasksExampleData
         return TasksExampleData;
@@ -43,20 +55,30 @@ class TasksContainer extends Component {
      * Callback function received from TasksContainer
      * This will send updated data to backend via ajax
      * */
-    updateWithAjax(modifiedTask, quickedit) {
+    updateWithAjax(originalTask, modifiedTask, quickedit) {
         console.log(modifiedTask);
         setTimeout(() => {
-            let modifiedTaskList = this.state.tasksList;
-            let findModifiedTask = modifiedTaskList.find(task => task === modifiedTask);
-            findModifiedTask.lastUpdated = new Date();
+            // let modifiedTaskList = Object.assign({}, this.state.tasksList);
+            // let findModifiedTask = modifiedTaskList.find(task => task === originalTask);
+            // findModifiedTask = Object.assign({}, modifiedTask);
+            // findModifiedTask.lastUpdated = new Date();
+
+            let modifiedTaskList = this.state.tasksList.map(task => {
+                if (task === originalTask) {
+                    task = modifiedTask;
+                    task.lastUpdated = new Date();
+                }
+                return task;
+            });
 
             let message;
-            if(quickedit === 'done') message = modifiedTask.title + 'marked as ' + modifiedTask.done ? 'done' : 'undone';
-            else if(quickedit === 'title') message = modifiedTask.title + ' changed to ' + modifiedTask.title;
+            if (quickedit === 'done') message = (modifiedTask.title + ' marked as ') + (modifiedTask.done ? 'done' : 'undone');
+            else if (quickedit === 'title') message = (modifiedTask.title + ' changed to ') + modifiedTask.title;
             else message = (modifiedTask.title ? modifiedTask.title : 'task') + ' updated';
 
             this.setState({
                 tasksList: modifiedTaskList,
+                activeTask: modifiedTask,
                 snackbar: {open: true, message: message}
             })
         }, simulateDelay ? simulateDelay : 0)
@@ -73,7 +95,8 @@ class TasksContainer extends Component {
         setTimeout(() => {
             this.setState({
                 tasksList: this.state.tasksList.filter(task => task !== taskData),
-                snackbar: {open: true, message: (taskData.title ? taskData.title : 'task') + ' deleted'}
+                snackbar: {open: true, message: (taskData.title ? taskData.title : 'task') + ' deleted'},
+                activeTask: null
             })
         }, simulateDelay ? simulateDelay : 0)
     }
@@ -90,6 +113,9 @@ class TasksContainer extends Component {
         })
     }
 
+    /**
+     * Determine which taske is active, in order to be shown to FullViewTask
+     * */
     setActive(taskData) {
         this.setState({activeTask: taskData})
     }
@@ -103,6 +129,9 @@ class TasksContainer extends Component {
      * - (Boolean) done
      * - (function) saveTitleChanges
      * - (function) saveMarking
+     * Also this contains the "+" button, which immediately creates a new empty task
+     * (see TasksContainer.emptyTask() function)
+     *
      *
      * The second will have a FullTaskView
      * It will pass as props all properties of "data" objects
@@ -122,20 +151,24 @@ class TasksContainer extends Component {
                 <div id='tasks-list'>
                     {this.state.tasksList.map(taskData =>
                         <Task key={taskData.id}
-                            title={taskData.title}
-                            done={taskData.done}
+                              title={taskData.title}
+                              done={taskData.done}
                             //created={taskData.created}
                             //lastUpdated={taskData.lastUpdated}
                             //deadline={taskData.deadline}
-                            saveTitleChanges={(title) => {
-                                taskData.title = title;
-                                this.updateWithAjax(taskData, 'title')
-                            }}
-                            saveMarking={(done) => {
-                                taskData.done = done;
-                                this.updateWithAjax(taskData, 'done')
-                            }}
-                            setThisActive={() => {this.setActive(taskData)}}
+                              saveTitleChanges={(title) => {
+                                  let modifiedTask = Object.assign({}, taskData);
+                                  modifiedTask.title = title;
+                                  this.updateWithAjax(taskData, modifiedTask, 'title')
+                              }}
+                              saveMarking={(done) => {
+                                  let modifiedTask = Object.assign({}, taskData);
+                                  modifiedTask.done = done;
+                                  this.updateWithAjax(taskData, modifiedTask, 'done')
+                              }}
+                              setThisActive={() => {
+                                  this.setActive(taskData)
+                              }}
                         />
                     )}
                     <FloatingActionButton
@@ -149,7 +182,7 @@ class TasksContainer extends Component {
                 <FullViewTask
                     taskToDisplay={this.state.activeTask}
                     saveChanges={(modifiedTask) => {
-                        this.updateWithAjax(modifiedTask)
+                        this.updateWithAjax(this.state.activeTask, modifiedTask)
                     }}
                     deleteThis={() => this.deleteWithAjax(this.state.activeTask)}
                 />
@@ -185,9 +218,6 @@ class TasksContainer extends Component {
 
 //It is used to simulate ajax delays
 const simulateDelay = false;
-
-
-
 
 
 export default TasksContainer;

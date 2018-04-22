@@ -58,7 +58,21 @@ class FullViewTask extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({task: nextProps.taskToDisplay});
+        this.setState({
+            task: nextProps.taskToDisplay,
+            editingButtonsActive: this.props === nextProps
+            /*If props change, it means another one is selected. So deactivate the buttons*/
+
+        });
+    }
+
+    shouldComponentUpdate(np, ns) {
+        conCon(this.debugEnabled, np, ns);
+        return true
+    }
+
+    componentDidUpdate() {
+
     }
 
     /**
@@ -66,7 +80,7 @@ class FullViewTask extends Component {
      * @param newValue
      * */
     handleChangeText = (origin, newValue) => {
-        let modifiedTask = this.state.task;
+        let modifiedTask = Object.assign({}, this.state.task);
         modifiedTask[origin] = newValue;
         this.setState({
             task: modifiedTask,
@@ -76,7 +90,7 @@ class FullViewTask extends Component {
 
     /*Same as handleChangeText, just that it is for mark done/undone*/
     handleChangeMark = (event) => {
-        let modifiedTask = this.state.task;
+        let modifiedTask = Object.assign({}, this.state.task);
         modifiedTask.done = !this.state.task.done;
         this.setState({
             task: modifiedTask,
@@ -88,10 +102,10 @@ class FullViewTask extends Component {
 
         if (!this.state.task) return;
 
-        let modifiedTask = this.state.task;
+        let modifiedTask = Object.assign({}, this.state.task);
         conCon(this.debugEnabled, date);
 
-        if(! modifiedTask.deadline) modifiedTask.deadline = new Date();
+        if (!modifiedTask.deadline) modifiedTask.deadline = new Date();
 
         /*date is always date and 00:00:00, so we need to only add date if we have one already */
         modifiedTask.deadline.setFullYear(date.getFullYear());
@@ -105,7 +119,7 @@ class FullViewTask extends Component {
     };
 
     handleChangeDeadlineTime = (event, time) => {
-        let modifiedTask = this.state.task;
+        let modifiedTask = Object.assign({}, this.state.task);
         conCon(this.debugEnabled, time);
 
         modifiedTask.deadline = time;
@@ -124,7 +138,7 @@ class FullViewTask extends Component {
         this.setState({
             editingButtonsActive: false
         });
-        this.props.saveChanges(this.props.taskToDisplay, this.state.task);
+        this.props.saveChanges(this.state.task);
     };
 
     /**
@@ -145,10 +159,12 @@ class FullViewTask extends Component {
         return (
             <div id='full-task-view'>
                 <div id='header-info'>
-                    <Chip>Created {this.state.task.created.toLocaleString()}</Chip>
+                    <Chip containerElement='span' style={{display: 'inline-flex'}}>
+                        Created {this.state.task.created.toLocaleString()}
+                        </Chip>
 
                     {this.state.task.lastUpdated ?
-                        <Chip>
+                        <Chip containerElement='span' style={{display: 'inline-flex'}}>
                             Last modified {this.state.task.lastUpdated.toLocaleString()}
                         </Chip>
                         : ''}

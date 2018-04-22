@@ -27,6 +27,7 @@
   to { transform: rotate(360deg); }
 }
 
-#full-task-view, #tasks-list {
+#full-task-view, #tasks-list, #no-active-task {
   display: inline-block;
+  width: 50%;
 }

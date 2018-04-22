@@ -45,6 +45,8 @@ class InlineTask extends Component {
         this.setState({
             title: nextProps.title,
             done: nextProps.done,
+            editingButtonsActive: this.props === nextProps
+            /*If props change, it means another one is selected. So deactivate the buttons*/
         });
     }
 
