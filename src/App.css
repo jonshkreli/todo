@@ -11,6 +11,11 @@
     height: 150px;
     padding: 20px;
     color: white;
+    border-color: transparent;
+    border-image-source: radial-gradient(circle, rgba(0,188,212,1) 24%, rgba(255,64,129,1) 100%);
+    border-bottom-width: 5px;
+    border-bottom-style: solid;
+    border-image-slice: 1;
 }
 
 .App-intro {
