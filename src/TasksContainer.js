@@ -30,7 +30,7 @@ class TasksContainer extends Component {
 
     componentWillMount() {
         setTimeout(() => {
-            this.setState({tasksList: this.getTasksListWithAjax()})
+            this.setState({tasksList: TasksContainer.getTasksListWithAjax()})
         }, simulateDelay ? simulateDelay : 0)
     }
 
@@ -46,7 +46,7 @@ class TasksContainer extends Component {
     componentWillReceiveProps(nextProps) {
     }
 
-    getTasksListWithAjax() {
+    static getTasksListWithAjax() {
         //This will return an array of tasks. For now we are using TasksExampleData
         return TasksExampleData;
     }
@@ -104,7 +104,7 @@ class TasksContainer extends Component {
     addNewTask() {
         //Add a new empty task
         let tempTaskList = this.state.tasksList;
-        let emptyTask = this.emptyTask();
+        let emptyTask = TasksContainer.emptyTask();
         tempTaskList.push(emptyTask);
         this.setState({
             tasksList: tempTaskList,
@@ -149,6 +149,7 @@ class TasksContainer extends Component {
         return (
             <div>
                 <div id='tasks-list'>
+                    {this.state.tasksList.length === 0 ? <h3>Not any task yet</h3> : null}
                     {this.state.tasksList.map(taskData =>
                         <Task key={taskData.id}
                               title={taskData.title}
@@ -204,7 +205,7 @@ class TasksContainer extends Component {
         });
     };
 
-    emptyTask() {
+    static emptyTask() {
         return {
             id: String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Date.now(),
             title: '',

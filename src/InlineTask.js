@@ -41,7 +41,7 @@ class InlineTask extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-       if(this.debugEnabled || globalDebugEnabled) console.log(nextProps);
+        if (this.debugEnabled || globalDebugEnabled) console.log(nextProps);
         this.setState({
             title: nextProps.title,
             done: nextProps.done,
@@ -67,7 +67,7 @@ class InlineTask extends Component {
      * This function will make a callback to TasksContainer with the updated changes
      * This disables save and cancel buttons
      * */
-    saveTitleEvent = (event) => {
+    saveTitleEvent = (/*event*/) => {
         this.setState({
             editingButtonsActive: false
         });
@@ -78,7 +78,7 @@ class InlineTask extends Component {
      * This function will restore the default value of title
      * This disables save and cancel buttons
      * */
-    cancelEvent = (event) => {
+    cancelEvent = (/*event*/) => {
         this.setState({
             title: this.props.title,
             editingButtonsActive: false
@@ -88,7 +88,7 @@ class InlineTask extends Component {
     /**
      * This function will send a callback to TasksContainer.updateWithAjax via property saveMarking
      * */
-    saveMarkingEvent = (event) => {
+    saveMarkingEvent = (/*event*/) => {
         this.setState({done: !this.state.done});
         this.props.saveMarking(!this.state.done)
     };

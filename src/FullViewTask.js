@@ -4,6 +4,7 @@ import FlatButton from 'material-ui/FlatButton';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import Chip from 'material-ui/Chip';
+import Dialog from 'material-ui/Dialog';
 import {conCon} from "./App";
 
 
@@ -33,28 +34,34 @@ import {conCon} from "./App";
  *   from <FullViewTask/> to <TasksContainer/>
  *
  * state:
- * - (Number) id
- * - (String) title
- * - (String) description
- * - (Boolean) done
- * - (Date) created
- * - (Date) lastUpdated
- * - (Date) deadline
+ * - task
+ * These will be properties inside task
+ * -- (Number) id
+ * -- (String) title
+ * -- (String) description
+ * -- (Boolean) done
+ * -- (Date) created
+ * -- (Date) lastUpdated
+ * -- (Date) deadline
  * Each of them will be initialised from props
  * - (Boolean) editingButtonsActive
  *    Default: false. Will be active once user start editing the TextField
+ * - (Boolean) deleteDialogOpen
+ *   Default: false. Will be active once user press "delete" button. False after dialog is closed.
  * */
 class FullViewTask extends Component {
 
     state = {
         task: this.props.taskToDisplay,
-        editingButtonsActive: false
+        editingButtonsActive: false,
+        deleteDialogOpen: false
     };
 
     debugEnabled = true; //If true it will print debug messages
 
     constructor(props) {
         super(props);
+        this.deleteEvent = this.deleteEvent.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -89,7 +96,7 @@ class FullViewTask extends Component {
     };
 
     /*Same as handleChangeText, just that it is for mark done/undone*/
-    handleChangeMark = (event) => {
+    handleChangeMark = (/*event*/) => {
         let modifiedTask = Object.assign({}, this.state.task);
         modifiedTask.done = !this.state.task.done;
         this.setState({
@@ -145,12 +152,50 @@ class FullViewTask extends Component {
      * This function will restore the default value of title
      * This disables save and cancel buttons
      * */
-    cancelEvent = (event) => {
+    cancelEvent = (/*event*/) => {
         this.setState({
             task: this.props.activeTask,
             editingButtonsActive: false
         });
     };
+
+    /**
+     * This function will be called when delete button is pressed. (An task must be active for delete button to be active)
+     * This function will open a dialog which you have 2 options: "YES" and "NO". This will be released by setting
+     * deleteDialogOpen to "true"
+     * */
+    deleteEvent(/*event*/) {
+        this.setState({
+            deleteDialogOpen: true
+        });
+    }
+
+    deleteDialogActions = [
+        <FlatButton
+            label="Yes"
+            primary={true}
+            onClick={() => this.handleDeleteDialogClose(true)} //If true then delete the task and close dialog
+        />,
+        <FlatButton
+            label="No"
+            secondary={true}
+            onClick={() => this.handleDeleteDialogClose(false)} //If false just close dialog
+        />,
+    ];
+
+    /**
+     * This function will be called if we press "Yes" or "No" buttons in DeleteDialog.
+     * 1 - Depending on deleteStatus it will delete or not the item by calling this.props.deleteThis
+     * 2 - Will close the dialog
+     * */
+    handleDeleteDialogClose(deleteStatus) {
+        this.setState({
+            deleteDialogOpen: false
+        });
+
+        if (deleteStatus) this.props.deleteThis();
+    }
+
 
     render() {
 
@@ -161,7 +206,7 @@ class FullViewTask extends Component {
                 <div id='header-info'>
                     <Chip containerElement='span' style={{display: 'inline-flex'}}>
                         Created {this.state.task.created.toLocaleString()}
-                        </Chip>
+                    </Chip>
 
                     {this.state.task.lastUpdated ?
                         <Chip containerElement='span' style={{display: 'inline-flex'}}>
@@ -228,8 +273,17 @@ class FullViewTask extends Component {
                     <FlatButton
                         label="Delete"
                         icon={<i className="material-icons">delete</i>}
-                        onClick={this.props.deleteThis}
+                        onClick={this.deleteEvent}
+                        //onClick={this.props.deleteThis}
                     />
+                    <Dialog
+                        title={"Task " + this.state.task.title}
+                        actions={this.deleteDialogActions}
+                        modal={true}
+                        open={this.state.deleteDialogOpen}
+                    >
+                        Are you sure you want to delete this task?
+                    </Dialog>
 
                 </div>
 
