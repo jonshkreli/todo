@@ -114,9 +114,11 @@ class TasksContainer extends Component {
     }
 
     /**
-     * Determine which taske is active, in order to be shown to FullViewTask
+     * Determine which task is active, in order to be shown to FullViewTask
      * */
     setActive(taskData) {
+        /*For some performance optimising, update the state only if there is another task selected*/
+        if(this.state.activeTask !== taskData)
         this.setState({activeTask: taskData})
     }
 
