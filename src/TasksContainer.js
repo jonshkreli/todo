@@ -56,7 +56,7 @@ class TasksContainer extends Component {
      * This will send updated data to backend via ajax
      * */
     updateWithAjax(originalTask, modifiedTask, quickedit) {
-        console.log(modifiedTask);
+        conCon(modifiedTask);
         setTimeout(() => {
             // let modifiedTaskList = Object.assign({}, this.state.tasksList);
             // let findModifiedTask = modifiedTaskList.find(task => task === originalTask);

@@ -57,7 +57,7 @@ class FullViewTask extends Component {
         deleteDialogOpen: false
     };
 
-    debugEnabled = true; //If true it will print debug messages
+    debugEnabled = false; //If true it will print debug messages
 
     constructor(props) {
         super(props);
